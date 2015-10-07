@@ -25,7 +25,10 @@
 
 			<div id="client-on-call" style="display: none;">
 				<?php $this->load->view('dialer/on-call-pad')?>
+				<br><br>
+				<?php $this->load->view('dialer/transfer-call')?>
 			</div><!-- #client-on-call -->
+			
 		</div>
 	</div>
 	

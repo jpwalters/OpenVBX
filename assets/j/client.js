@@ -257,7 +257,7 @@ var Client = {
 	
 	answer: function() {
 		this.accept();
-		this.ui.show_actions('.mute, .hangup');
+		this.ui.show_actions('.mute, .hangup, .transfer');
 	},
 	
 	call: function (params) {
@@ -281,6 +281,32 @@ var Client = {
 	hangup: function () {
 		if (this.connection) {
 			this.connection.disconnect();
+		}
+		else {
+			this.ui.toggleCallView('close');
+		}
+	},
+	
+	transfer: function () {
+		if (this.connection) {
+			console.log("Here:" + OpenVBX.home + '/transfer/call/' + this.connection.parameters.CallSid + '/to/jamespwalters@gmail.com');
+
+			$.ajax({
+				url: OpenVBX.home + '/transfer/call/' + this.connection.parameters.CallSid + '/to/jamespwalters@gmail.com',
+				data: {},
+				dataType: 'json',
+				type: 'GET',
+				success: function(response) {
+					if (response.error) {
+						console.log("error:" + response.message);
+						Client.triggerError('Unable to refresh users. Message from server: '
+												+ response.message);
+					}
+					else {
+						console.log("success");
+					}
+				}
+			});
 		}
 		else {
 			this.ui.toggleCallView('close');
@@ -896,6 +922,12 @@ $(function () {
 	$('#client-ui-mute', dialer).live('click', function(event) {
 		stopEvent(event);
 		Client.togglemute();
+	});
+	
+	// Transfer Call button clicked
+	$('#client-ui-transfer', dialer).live('click', function(event) {
+		stopEvent(event);
+		Client.transfer();
 	});
 
 	// Button on Keypad clicked
