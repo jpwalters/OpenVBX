@@ -87,6 +87,7 @@ $route['twiml/start/voice/(:any)'] = "twiml/start_voice/$1";
 $route['twiml/start/sms/(:any)'] = "twiml/start_sms/$1";
 $route['twiml/applet/voice/(:any)/(:any)'] = "twiml/voice/$1/$2";
 $route['twiml/applet/sms/(:any)/(:any)'] = "twiml/sms/$1/$2";
+$route['twiml/transfer/(:any)'] = "twiml/transfer/$1";
 $route['twiml'] = "twiml";
 $route['p/(:any)'] = "page/index/$1";
 $route['p/(:any)/(:any)'] = "page/index/$1/$2";

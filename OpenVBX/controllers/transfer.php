@@ -76,23 +76,20 @@ class Transfer extends MY_Controller {
 		$account = OpenVBX::getAccount();
 		
 		$call = $account->calls->get($call_sid);
-		echo '1';
-		$parent_call = $account->calls->get($call->ParentCallSid);
+	
+		$parent_call = $account->calls->get($call->parent_call_sid);
 		
-		$parent_call->to = $transfer_to;
-
 		$config =& get_config();
 		
 		try {
-				$parent_call->update(array(
-				"Url" => $config['base_url']."twiml/transfer",
-				"Method" => "POST",
-				"From" => "14044918465",
-				"To" => "14042724778"
+			
+			$parent_call->update(array(
+				"Url" => $config['base_url']."twiml/transfer/".$transfer_to,
+				"Method" => "POST"
 			));
 		}
 		catch (Exception $e) {
 			echo 'Caught exception: ',  $e->getMessage(), "\n";
-		}	
+		}
 	}
 }

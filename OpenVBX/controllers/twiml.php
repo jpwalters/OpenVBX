@@ -374,60 +374,43 @@ class Twiml extends MY_Controller {
 		}
 
 		$this->response->respond();
-	}
+	}	
 	
-	public function transfer()
+	/**
+	 * Transfer a call.
+	 *
+	 * @param string $to 
+	 * @return void
+	 */
+	public function transfer($to)
 	{
 		//validate_rest_request();
 
 		$rest_access = $this->input->get_post('rest_access');
-		$to = $this->input->get_post('to');
-		$callerid = $this->input->get_post('callerid');
+		$callerid = $this->input->get_post('callerId');
 		
-		// Response
-		$user = VBX_User::get($this->session->userdata('user_id'));
-		$name = '';
-		if(empty($user))
+		$options = array(
+			'action' => site_url("twiml/dial_status").'?'.http_build_query(compact($to)),
+			'callerId' => $callerid,
+			'timeout' => $this->vbx_settings->get('dial_timeout', $this->tenant->id)
+		);
+		
+		if (filter_var($to, FILTER_VALIDATE_EMAIL)) 
 		{
-			log_message('error', 'Unable to find user: '.$this->session->userdata('user_id'));
+			$this->dial_user_by_email($to, $options);
 		}
-		else
+		elseif(preg_match('|client:[0-9]{1,4}|', $to))
 		{
-			$name = $user->first_name;
+			$this->dial_user_by_client_id($to, $options);
 		}
-
-		$digits = clean_digits($this->input->get_post('Digits'));
-		if($digits !== false && $digits == 1) 
-		{
-			$options = array(
-				'action' => site_url("twiml/dial_status").'?'.http_build_query(compact('to')),
-				'callerId' => $callerid,
-				'timeout' => $this->vbx_settings->get('dial_timeout', $this->tenant->id)
-			);
-			
-			if (filter_var($this->input->get_post('to'), FILTER_VALIDATE_EMAIL)) 
-			{
-				$this->dial_user_by_email($this->input->get_post('to'), $options);
-			}
-			elseif(preg_match('|client:[0-9]{1,4}|', $this->input->get_post('to')))
-			{
-				$this->dial_user_by_client_id($this->input->get_post('to'), $options);
-			}
-			else 
-			{
-				$to = normalize_phone_to_E164($to);
-				$this->response->dial($to, $options);
-			}
-		} 
 		else 
 		{
-			$gather = $this->response->gather(array('numDigits' => 1));
-			$gather->say("Hello {$name}, this is a call from VeeBee Ex, to accept, press 1.", 
-						$this->say_params);
+			$to = normalize_phone_to_E164($to);
+			$this->response->dial($to, $options);
 		}
 
 		$this->response->respond();
-	}
+	}	
 	
 	/**
 	 * Dial a user by 'client:1' format
