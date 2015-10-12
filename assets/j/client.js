@@ -289,10 +289,10 @@ var Client = {
 	
 	transfer: function () {
 		if (this.connection) {
-			console.log("Here:" + OpenVBX.home + '/transfer/call/' + this.connection.parameters.CallSid + '/to/jamespwalters@gmail.com');
+			console.log("Here:" + OpenVBX.home + '/transfer/call/' + this.connection.parameters.CallSid + '/to/' + $('#transfer_number').val());
 
 			$.ajax({
-				url: OpenVBX.home + '/transfer/call/' + this.connection.parameters.CallSid + '/to/jamespwalters@gmail.com',
+				url: OpenVBX.home + '/transfer/call/' + this.connection.parameters.CallSid + '/to/' + $('#transfer_number').val(),
 				data: {},
 				dataType: 'json',
 				type: 'GET',
