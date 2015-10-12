@@ -64,6 +64,9 @@
 	<button id="client-ui-mute" class="client-ui-action-button mute">Mute</button>
 	<button id="client-ui-answer" class="client-ui-action-button answer">Answer</button>
 	<button id="client-ui-hangup" class="client-ui-action-button hangup">Hangup</button>
-	<button id="client-ui-transfer" class="client-ui-action-button mute">Transfer</button>
 	<button id="client-ui-close" class="client-ui-action-button close">Close</button>
+	<div class="client-ui-button-row" id="transfer">
+		<?php echo t_form_input(array('name' => 'transfer_number','id' => 'transfer_number','placeholder' => '(555) 867 5309'), ''); ?>
+		<button id="client-ui-transfer" class="client-ui-action-button mute">Transfer</button>
+</div>
 </div><!-- #client-ui-actions -->
