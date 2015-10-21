@@ -378,7 +378,43 @@ class Twiml extends MY_Controller {
 		}
 
 		$this->response->respond();
-	}
+	}	
+	
+	/**
+	 * Transfer a call.
+	 *
+	 * @param string $to 
+	 * @return void
+	 */
+	public function transfer($to)
+	{
+		//validate_rest_request();
+
+		$rest_access = $this->input->get_post('rest_access');
+		$callerid = $this->input->get_post('callerId');
+		
+		$options = array(
+			'action' => site_url("twiml/dial_status").'?'.http_build_query(compact($to)),
+			'callerId' => $callerid,
+			'timeout' => $this->vbx_settings->get('dial_timeout', $this->tenant->id)
+		);
+		
+		if (filter_var($to, FILTER_VALIDATE_EMAIL)) 
+		{
+			$this->dial_user_by_email($to, $options);
+		}
+		elseif(preg_match('|client:[0-9]{1,4}|', $to))
+		{
+			$this->dial_user_by_client_id($to, $options);
+		}
+		else 
+		{
+			$to = normalize_phone_to_E164($to);
+			$this->response->dial($to, $options);
+		}
+
+		$this->response->respond();
+	}	
 	
 	/**
 	 * Dial a user by 'client:1' format
