@@ -145,6 +145,7 @@ class Inbox extends User_Controller {
 				'original_called' => $item->called,
 				'original_caller' => $item->caller,
 				'owner_type' => $item->owner_type,
+				'sid' => $item->call_sid,
 			);
 
 		}
@@ -310,6 +311,7 @@ class Inbox extends User_Controller {
 								 'original_called' => $item->called,
 								 'original_caller' => $item->caller,
 								 'owner_type' => $item->owner_type,
+								 'sid' => $item->call_sid,
 								 );
 
 			}
