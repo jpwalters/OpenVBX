@@ -96,6 +96,7 @@ class VBX_Sms_message extends Model {
 	{
 		$from = PhoneNumber::normalizePhoneNumberToE164($from);
 		$to = PhoneNumber::normalizePhoneNumberToE164($to);
+		$mediaUrls = ($mediaUrls==''?null:$mediaUrls);
 		
 		try {
 			$account = OpenVBX::getAccount();
